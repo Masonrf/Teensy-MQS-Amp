@@ -18,10 +18,23 @@ AudioConnection          patchCord3(amp_R, 0, mqs_out, 1);
 AudioConnection          patchCord4(amp_L, 0, mqs_out, 0);
 // GUItool: end automatically generated code
 
+float32_t volume = 0;
+
 void setup() {
-  AudioMemory(20);
+    AudioMemory(20);
+    amp_L.gain(volume);
+    amp_R.gain(volume);
+    delay(500);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+    // Only update on change
+    if(usb_in.features.change == 1) {
+        volume = usb_in.volume();
+        amp_L.gain(volume);
+        amp_R.gain(volume);
+
+        usb_in.features.change = 0;
+    }
+    
 }
